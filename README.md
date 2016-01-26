@@ -1,14 +1,19 @@
 # Confluence Include Child Pages User Macro
 
+
 Includes content of all the immediate child pages into the current page.
+
 
 ## Usage
 
+
 To use it, one has to create a new user macro in confluence (in your confluence go to /admin/usermacros.action). Name it as you like for instance **include_child_pages**. In the macro's template put the content of the file *include_pages_macro.vm*.
 
-When the macro is saved, it can be included on any page like this (or from the menu *Insert/Other macros*:
+When the macro is saved, it can be included on any page like this (or from the menu *Insert/Other macros*):
 
+>
 > {include_child_pages}
+>
 
 
 ## Configuration
