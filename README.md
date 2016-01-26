@@ -1,6 +1,6 @@
 # Confluence Include Child Pages User Macro
 
-Includes content of all the immediate child pages into the current page. Used to assemble (include content) of all the subpages.
+Includes content of all the immediate child pages into the current page.
 
 ## Usage
 
