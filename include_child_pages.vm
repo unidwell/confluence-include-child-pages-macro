@@ -1,0 +1,73 @@
+## Developed by: Davin Studer
+## Date created: 12/4/2014
+ 
+## @param ShowTitle:title=Show Title|type=boolean|desc=Deselect to remove the title of the child page.|default=true
+## @param LinkTitle:title=Link Title|type=boolean|desc=Select to turn the titles of the child pages into links to those pages (Show Title must be selected).|default=false
+## @param Order:title=Order|type=enum|enumValues=Nav Order,Reverse Nav order,Alphabetical,Reverse Alphabetical,Create Date,Reverse Create Date|default=nav order|desc=What order should the child pages be displayed? Nav Order refers to the order of the child pages in the nav tree. Reverse Nav Order simply reverses that.
+ 
+#set( $containerManagerClass=$content.class.forName('com.atlassian.spring.container.ContainerManager') )
+#set( $getInstanceMethod=$containerManagerClass.getDeclaredMethod('getInstance',null) )
+#set( $containerManager=$getInstanceMethod.invoke(null,null) )
+#set( $containerContext=$containerManager.containerContext )
+#set( $pageManager=$containerContext.getComponent('pageManager') )
+ 
+#set( $data = "" )
+#if( $paramOrder == "Nav Order" || $paramOrder == "Reverse Nav order")
+    #set( $children =  $pageManager.getPage($content.id).getSortedChildren() )
+#elseif( $paramOrder == "Alphabetical" || $paramOrder == "Reverse Alphabetical")
+    #set( $array =  $pageManager.getPage($content.id).getChildren() )
+    ###############################################################
+    ## Could not find a method to get them in Alphabetical order ##
+    ## Must sort them myself ... Bubble sort                     ##
+    ###############################################################
+    #set( $size = $array.size() )
+    #foreach( $junk in $array )
+        #set( $count = -1 )
+        #foreach( $line in $array )
+            #set( $count = $count + 1 )
+            #if( $velocityCount < $size )
+                #if( $line.getTitle().compareToIgnoreCase($array.get($velocityCount).getTitle()) > 0 )
+                    #set( $tmp = $array.get($velocityCount) )
+                    #set( $junk = $array.set($velocityCount, $line) )
+                    #set( $junk = $array.set($count, $tmp) )
+                #end
+            #end
+        #end
+    #end
+    #set( $children = $array)
+#elseif( $paramOrder == "Create Date" || $paramOrder == "Reverse Create Date")
+    #set( $children =  $pageManager.getPage($content.id).getChildren() )
+#end
+ 
+#foreach( $child in $children )
+    #set( $include = "" )
+    #set( $include = $include + '<div class="included-child-page">')
+    #if( $paramShowTitle == true )
+        #if( $paramLinkTitle == true )
+            #set( $include = $include + '<h1 class="included-child-page-title"><a href="' + $child.getUrlPath() + '">' + $child.getTitle() + '</a></h1>' )
+        #else
+            #set( $include = $include + '<h1 class="included-child-page-title">' + $child.getTitle() + '</h1>')
+        #end
+    #end
+    #set( $include = $include + '<div class="included-child-page-body">')
+        #set( $include = $include + '<ac:structured-macro ac:name="include">')
+            #set( $include = $include + '<ac:parameter ac:name="">')
+                #set( $include = $include + '<ac:link>')
+                    #set( $include = $include + '<ri:page ri:content-title="' + $child.getTitle() + '" ri:space-key="' + $content.spaceKey + '"/>')
+                #set( $include = $include + '</ac:link>')
+            #set( $include = $include + '</ac:parameter>')
+        #set( $include = $include + '</ac:structured-macro>')
+    #set( $include = $include + '</div>')
+    #set( $include = $include + '</div>')
+    #if( $paramOrder == "Nav Order"  || $paramOrder == "Alphabetical" || $paramOrder == "Create Date" )
+        #set( $data = $data + $include )
+    #else
+        #set( $data = $include + $data)
+    #end
+#end
+ 
+$data
+ 
+<style type="text/css">
+    .included-child-page {margin-bottom: 30px;}
+</style>
