@@ -10,7 +10,7 @@
 ## @param LinkTitle:title=Link Title|type=boolean|desc=Select to turn the titles of the child pages into links to those pages (Show Title must be selected).|default=false
 ## @param PageSeparator:title=Page Separator|type=boolean|desc=Separate pages with horizontal ruler.|default=false
 ## @param SplitPages:title=Split Pages|type=boolean|desc=Split pages marker for PDF export will be inserted.|default=false
-## @param Order:title=Order|type=enum|enumValues=Nav Order,Reverse Nav Order,Alphabetical,Reverse Alphabetical,Create Date,Reverse Create Date|default=nav order|desc=In what order should the child pages be displayed? Nav Order refers to the order of the child pages in the nav tree. Reverse Nav Order simply reverses that.
+## @param Order:title=Order|type=enum|enumValues=Nav Order,Reverse Nav Order,Alphabetical,Reverse Alphabetical,Create Date,Reverse Create Date|default=nav order|desc=In what order should the child pages be displayed? Nav Order refers to the order of the child pages in the page tree. Reverse Nav Order simply reverses that.
 
 #set( $containerManagerClass=$content.class.forName('com.atlassian.spring.container.ContainerManager') )
 #set( $getInstanceMethod=$containerManagerClass.getDeclaredMethod('getInstance',null) )
