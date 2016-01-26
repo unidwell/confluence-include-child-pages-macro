@@ -1,10 +1,17 @@
 ## Developed by: Davin Studer
 ## Date created: 12/4/2014
+## Updated by: Milo Grika
+## Added: show/hide title, link/unlink title.
+## Updated by: Gregor Mirai
+## Date updated: 26/1/2016
+## Added: page separator, PDF split page marker options.
  
 ## @param ShowTitle:title=Show Title|type=boolean|desc=Deselect to remove the title of the child page.|default=true
 ## @param LinkTitle:title=Link Title|type=boolean|desc=Select to turn the titles of the child pages into links to those pages (Show Title must be selected).|default=false
-## @param Order:title=Order|type=enum|enumValues=Nav Order,Reverse Nav order,Alphabetical,Reverse Alphabetical,Create Date,Reverse Create Date|default=nav order|desc=What order should the child pages be displayed? Nav Order refers to the order of the child pages in the nav tree. Reverse Nav Order simply reverses that.
- 
+## @param PageSeparator:title=Page Separator|type=boolean|desc=Separate pages with horizontal ruler.|default=false
+## @param SplitPages:title=Split Pages|type=boolean|desc=Split pages marker for PDF export will be inserted.|default=false
+## @param Order:title=Order|type=enum|enumValues=Nav Order,Reverse Nav Order,Alphabetical,Reverse Alphabetical,Create Date,Reverse Create Date|default=nav order|desc=In what order should the child pages be displayed? Nav Order refers to the order of the child pages in the nav tree. Reverse Nav Order simply reverses that.
+
 #set( $containerManagerClass=$content.class.forName('com.atlassian.spring.container.ContainerManager') )
 #set( $getInstanceMethod=$containerManagerClass.getDeclaredMethod('getInstance',null) )
 #set( $containerManager=$getInstanceMethod.invoke(null,null) )
@@ -12,9 +19,9 @@
 #set( $pageManager=$containerContext.getComponent('pageManager') )
  
 #set( $data = "" )
-#if( $paramOrder == "Nav Order" || $paramOrder == "Reverse Nav order")
+#if( $paramOrder == "Nav Order" || $paramOrder == "Reverse Nav Order" )
     #set( $children =  $pageManager.getPage($content.id).getSortedChildren() )
-#elseif( $paramOrder == "Alphabetical" || $paramOrder == "Reverse Alphabetical")
+#elseif( $paramOrder == "Alphabetical" || $paramOrder == "Reverse Alphabetical" )
     #set( $array =  $pageManager.getPage($content.id).getChildren() )
     ###############################################################
     ## Could not find a method to get them in Alphabetical order ##
@@ -34,32 +41,66 @@
             #end
         #end
     #end
-    #set( $children = $array)
-#elseif( $paramOrder == "Create Date" || $paramOrder == "Reverse Create Date")
+    #set( $children = $array )
+#elseif( $paramOrder == "Create Date" || $paramOrder == "Reverse Create Date" )
     #set( $children =  $pageManager.getPage($content.id).getChildren() )
 #end
  
+#set( $count = -1 )
+#set( $size = $children.size() )
+
 #foreach( $child in $children )
+    #set( $count = $count + 1 )
     #set( $include = "" )
-    #set( $include = $include + '<div class="included-child-page">')
+    #set( $include = $include + '<div class="included-child-page">' )
+
+    ## Show title and links.
     #if( $paramShowTitle == true )
         #if( $paramLinkTitle == true )
             #set( $include = $include + '<h1 class="included-child-page-title"><a href="' + $child.getUrlPath() + '">' + $child.getTitle() + '</a></h1>' )
         #else
-            #set( $include = $include + '<h1 class="included-child-page-title">' + $child.getTitle() + '</h1>')
+            #set( $include = $include + '<h1 class="included-child-page-title">' + $child.getTitle() + '</h1>' )
         #end
     #end
-    #set( $include = $include + '<div class="included-child-page-body">')
-        #set( $include = $include + '<ac:structured-macro ac:name="include">')
-            #set( $include = $include + '<ac:parameter ac:name="">')
-                #set( $include = $include + '<ac:link>')
-                    #set( $include = $include + '<ri:page ri:content-title="' + $child.getTitle() + '" ri:space-key="' + $content.spaceKey + '"/>')
-                #set( $include = $include + '</ac:link>')
-            #set( $include = $include + '</ac:parameter>')
-        #set( $include = $include + '</ac:structured-macro>')
-    #set( $include = $include + '</div>')
-    #set( $include = $include + '</div>')
-    #if( $paramOrder == "Nav Order"  || $paramOrder == "Alphabetical" || $paramOrder == "Create Date" )
+
+    ## Include sub page.
+    #set( $include = $include + '<div class="included-child-page-body">' )
+        #set( $include = $include + '<ac:structured-macro ac:name="include">' )
+            #set( $include = $include + '<ac:parameter ac:name="">' )
+                #set( $include = $include + '<ac:link>' )
+                    #set( $include = $include + '<ri:page ri:content-title="' + $child.getTitle() + '" ri:space-key="' + $content.spaceKey + '"/>' )
+                #set( $include = $include + '</ac:link>' )
+            #set( $include = $include + '</ac:parameter>' )
+        #set( $include = $include + '</ac:structured-macro>' )
+    #set( $include = $include + '</div>' )
+    #set( $include = $include + '</div>' )
+
+    ## Define sorting order.
+    #set( $inOrder = false )
+    #if( $paramOrder == "Nav Order" || $paramOrder == "Alphabetical" || $paramOrder == "Create Date" )
+        #set( $inOrder = true )
+    #end
+
+    ## Find out, whether we are in between pages or not.
+    #set( $betweenPages = false )
+    #if( $inOrder == true && $count < $size - 1 )
+        #set( $betweenPages = true )
+    #elseif( $inOrder == false && $count > 0 && $count < $size )
+        #set( $betweenPages = true )
+    #end
+
+    ## Include page separator or include page split marker used for PDF exports.
+    #if( $betweenPages == true )
+        #if( $paramPageSeparator == true )
+            #set( $include = $include + '<hr/><br/>' )
+        #end
+        #if( $paramSplitPages == true )
+            #set( $include = $include + '<div style="page-break-before:always;"></div>' )
+        #end
+    #end
+
+    ## Add page content in order or in reverse order.
+    #if( $inOrder == true )
         #set( $data = $data + $include )
     #else
         #set( $data = $include + $data)
