@@ -18,7 +18,7 @@ When the macro is saved, it can be included on any page like this (or from the m
 
 ## Configuration
 
-There are some configurations options that decide how the output should be displayed. One (**SplitPages**) affects the output only in PDF files.
+There are some configurations options that decide how the output should be displayed. The option (**SplitPages**) affects the output only in PDF files.
 
 | Parameter     | Options         | Description  |
 | ------------- | -------------   | ------------ |
