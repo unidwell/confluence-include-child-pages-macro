@@ -22,11 +22,11 @@ There are some configurations options that decide how the output should be displ
 
 | Parameter     | Options         | Description  |
 | ------------- | -------------   | ------------ |
-| ShowTitle     | <boolean value> | Deselect to remove the title of the child page. Selected by default. |
-| LinkTitle     | <boolean value> | Select to turn the titles of the child pages into links to those pages (Show Title must be selected). |
-| PageSeparator | <boolean value> | Separate pages with horizontal ruler. |
-| SplitPages    | <boolean value> | Split pages marker for PDF export will be inserted. |
-| Order         | Nav Order, Reverse Nav Order, Alphabetical, Reverse Alphabetical, Create Date, Reverse Create Date | In what order should the child pages be displayed? **Nav Order** refers to the order of the child pages in the nav tree. **Reverse Nav Order** simply reverses that. |
+| ShowTitle     | *boolean value* | Deselect to remove the title of the child page. Selected by default. |
+| LinkTitle     | *boolean value* | Select to turn the titles of the child pages into links to those pages (Show Title must be selected). |
+| PageSeparator | *boolean value* | Separate pages with horizontal ruler. |
+| SplitPages    | *boolean value* | Split pages marker for PDF export will be inserted. |
+| Order         | *Nav Order*, *Reverse Nav Order*, *Alphabetical*, *Reverse Alphabetical*, *Create Date*, *Reverse Create Date* | In what order should the child pages be displayed? **Nav Order** refers to the order of the child pages in the nav tree. **Reverse Nav Order** simply reverses that. |
 
 
 ## Confluence version
