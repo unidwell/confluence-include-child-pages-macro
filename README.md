@@ -15,18 +15,20 @@ When the macro is saved, it can be included on any page like this (or from the m
 > {include_child_pages}
 >
 
+The next thing to do is to configure some of the parameters that guide the output. The macro can be used recursively, i.e. partially glue pages together on one level, glue them together on higher level in the page tree. Subpages can be selected by their label.
 
 ## Configuration
 
 There are some configurations options that decide how the output should be displayed. The option (**SplitPages**) affects the output only in PDF files.
 
-| Parameter     | Options         | Description  |
-| ------------- | -------------   | ------------ |
-| ShowTitle     | *boolean value* | Deselect to remove the title of the child page. Selected by default. |
-| LinkTitle     | *boolean value* | Select to turn the titles of the child pages into links to those pages (Show Title must be selected). |
-| PageSeparator | *boolean value* | Separate pages with horizontal ruler. |
-| SplitPages    | *boolean value* | Split pages marker for PDF export will be inserted. |
-| Order         | *Nav Order*, *Reverse Nav Order*, *Alphabetical*, *Reverse Alphabetical*, *Create Date*, *Reverse Create Date* | In what order should the child pages be displayed? **Nav Order** refers to the order of the child pages in the page tree. **Reverse Nav Order** simply reverses that. |
+| Parameter            | Options         | Description  |
+| -------------        | -------------   | ------------ |
+| Show Title           | *boolean value* | Deselect to remove the title of the child page. Selected by default. |
+| Link Title           | *boolean value* | Select to turn the titles of the child pages into links to those pages (Show Title must be selected). |
+| Page Separator       | *boolean value* | Separate pages with horizontal ruler. |
+| Split Pages          | *boolean value* | Split pages marker for PDF export will be inserted. |
+| Filter on Page Label |*string value* | Include only subpages with the specified label. |
+| Order                | *Nav Order*, *Reverse Nav Order*, *Alphabetical*, *Reverse Alphabetical*, *Create Date*, *Reverse Create Date* | In what order should the child pages be displayed? **Nav Order** refers to the order of the child pages in the page tree. **Reverse Nav Order** simply reverses that. |
 
 
 ## Confluence version
