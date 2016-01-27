@@ -37,7 +37,7 @@ There are some configurations options that decide how the output should be displ
 Version 5.x are supported.
 
 
-## License
+## Copyright adn License
 
 
-This project is under the MIT License. See the [LICENSE](./LICENSE) file for the full license text.
+Code and documentation copyright 2016 (all contributers). Code released under [the MIT License](./LICENSE).
