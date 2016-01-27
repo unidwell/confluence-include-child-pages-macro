@@ -10,6 +10,7 @@
 ## @param LinkTitle:title=Link Title|type=boolean|desc=Select to turn the titles of the child pages into links to those pages (Show Title must be selected).|default=false
 ## @param PageSeparator:title=Page Separator|type=boolean|desc=Separate pages with horizontal ruler.|default=false
 ## @param SplitPages:title=Split Pages|type=boolean|desc=Split pages marker for PDF export will be inserted.|default=false
+## @param FilterLabel:title=Filter on Page Label|type=string|desc=Include only subpages with the specified label.
 ## @param Order:title=Order|type=enum|enumValues=Nav Order,Reverse Nav Order,Alphabetical,Reverse Alphabetical,Create Date,Reverse Create Date|default=nav order|desc=In what order should the child pages be displayed? Nav Order refers to the order of the child pages in the page tree. Reverse Nav Order simply reverses that.
 
 #set( $containerManagerClass=$content.class.forName('com.atlassian.spring.container.ContainerManager') )
@@ -17,7 +18,8 @@
 #set( $containerManager=$getInstanceMethod.invoke(null,null) )
 #set( $containerContext=$containerManager.containerContext )
 #set( $pageManager=$containerContext.getComponent('pageManager') )
- 
+
+## Find the array of (sorted) child pages.
 #set( $data = "" )
 #if( $paramOrder == "Nav Order" || $paramOrder == "Reverse Nav Order" )
     #set( $children =  $pageManager.getPage($content.id).getSortedChildren() )
@@ -45,70 +47,85 @@
 #elseif( $paramOrder == "Create Date" || $paramOrder == "Reverse Create Date" )
     #set( $children =  $pageManager.getPage($content.id).getChildren() )
 #end
- 
+
+## Prepare children data. 
 #set( $count = -1 )
+#set( $skipped = 0 )
 #set( $size = $children.size() )
-
 #foreach( $child in $children )
-    #set( $count = $count + 1 )
-    #set( $include = "" )
-    #set( $include = $include + '<div class="included-child-page">' )
-
-    ## Show title and links.
-    #if( $paramShowTitle == true )
-        #if( $paramLinkTitle == true )
-            #set( $include = $include + '<h1 class="included-child-page-title"><a href="' + $child.getUrlPath() + '">' + $child.getTitle() + '</a></h1>' )
-        #else
-            #set( $include = $include + '<h1 class="included-child-page-title">' + $child.getTitle() + '</h1>' )
-        #end
+    ## Create the map of labels for the page.
+    #set( $labelsMap = {} )
+    #foreach( $label in $child.getLabels() )
+        #set( $dummy = $labelsMap.put($label.toString(), 1) )
     #end
 
-    ## Include sub page.
-    #set( $include = $include + '<div class="included-child-page-body">' )
-        #set( $include = $include + '<ac:structured-macro ac:name="include">' )
-            #set( $include = $include + '<ac:parameter ac:name="">' )
-                #set( $include = $include + '<ac:link>' )
-                    #set( $include = $include + '<ri:page ri:content-title="' + $child.getTitle() + '" ri:space-key="' + $content.spaceKey + '"/>' )
-                #set( $include = $include + '</ac:link>' )
-            #set( $include = $include + '</ac:parameter>' )
-        #set( $include = $include + '</ac:structured-macro>' )
-    #set( $include = $include + '</div>' )
-    #set( $include = $include + '</div>' )
-
-    ## Define sorting order.
-    #set( $inOrder = false )
-    #if( $paramOrder == "Nav Order" || $paramOrder == "Alphabetical" || $paramOrder == "Create Date" )
-        #set( $inOrder = true )
-    #end
-
-    ## Find out, whether we are in between pages or not.
-    #set( $betweenPages = false )
-    #if( $inOrder == true && $count < $size - 1 )
-        #set( $betweenPages = true )
-    #elseif( $inOrder == false && $count > 0 && $count < $size )
-        #set( $betweenPages = true )
-    #end
-
-    ## Include page separator or include page split marker used for PDF exports.
-    #if( $betweenPages == true )
-        #if( $paramPageSeparator == true )
-            #set( $include = $include + '<hr/><br/>' )
-        #end
-        #if( $paramSplitPages == true )
-            #set( $include = $include + '<div style="page-break-before:always;"></div>' )
-        #end
-    #end
-
-    ## Add page content in order or in reverse order.
-    #if( $inOrder == true )
-        #set( $data = $data + $include )
+    ## Include all pages (when no filter label is specified) or pages with a specific label.
+    #if( $paramFilterLabel && !$labelsMap.containsKey($paramFilterLabel) )
+        #set( $skipped = $skipped + 1)
     #else
-        #set( $data = $include + $data)
+        #set( $count = $count + 1 )
+        #set( $include = "" )
+        #set( $include = $include + '<div class="included-child-page">' )
+
+        ## Show title and links.
+        #if( $paramShowTitle == true )
+            #if( $paramLinkTitle == true )
+                #set( $include = $include + '<h1 class="included-child-page-title"><a href="' + $child.getUrlPath() + '">' + $child.getTitle() + '</a></h1>' )
+            #else
+                #set( $include = $include + '<h1 class="included-child-page-title">' + $child.getTitle() + '</h1>' )
+            #end
+        #end
+
+        ## Include sub page.
+        #set( $include = $include + '<div class="included-child-page-body">' )
+            #set( $include = $include + '<ac:structured-macro ac:name="include">' )
+                #set( $include = $include + '<ac:parameter ac:name="">' )
+                    #set( $include = $include + '<ac:link>' )
+                        #set( $include = $include + '<ri:page ri:content-title="' + $child.getTitle() + '" ri:space-key="' + $content.spaceKey + '"/>' )
+                    #set( $include = $include + '</ac:link>' )
+                #set( $include = $include + '</ac:parameter>' )
+            #set( $include = $include + '</ac:structured-macro>' )
+        #set( $include = $include + '</div>' )
+        #set( $include = $include + '</div>' )
+
+        ## Define sorting order.
+        #set( $inOrder = false )
+        #if( $paramOrder == "Nav Order" || $paramOrder == "Alphabetical" || $paramOrder == "Create Date" )
+            #set( $inOrder = true )
+        #end
+
+        ## Find out, whether we are in between pages or not.
+        #set( $betweenPages = false )
+        #if( $inOrder == true && $count < $size - $skipped - 1 )
+            #set( $betweenPages = true )
+        #elseif( $inOrder == false && $count > 0 && $count < $size - $skipped )
+            #set( $betweenPages = true )
+        #end
+
+        ## Include page separator or include page split marker used for PDF exports.
+        #if( $betweenPages == true )
+            #if( $paramPageSeparator == true )
+                #set( $include = $include + '<hr/><br/>' )
+            #end
+            #if( $paramSplitPages == true )
+                #set( $include = $include + '<div style="page-break-before:always;"></div>' )
+            #end
+        #end
+
+        ## Add page content in order or in reverse order.
+        #if( $inOrder == true )
+            #set( $data = $data + $include )
+        #else
+            #set( $data = $include + $data)
+        #end
     #end
 #end
  
 $data
  
 <style type="text/css">
-    .included-child-page {margin-bottom: 30px;}
+    .included-child-page {
+        margin-bottom: 30px;
+        overflow: hidden;
+    }
 </style>
