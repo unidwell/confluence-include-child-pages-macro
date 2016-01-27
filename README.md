@@ -35,3 +35,9 @@ There are some configurations options that decide how the output should be displ
 
 
 Version 5.x are supported.
+
+
+## License
+
+
+This project is under the MIT License. See the [LICENSE](./LICENSE) file for the full license text.
