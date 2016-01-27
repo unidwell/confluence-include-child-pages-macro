@@ -15,7 +15,7 @@ When the macro is saved, it can be included on any page like this (or from the m
 > {include_child_pages}
 >
 
-The next thing to do is to configure some of the parameters that guide the output. The macro can be used recursively, i.e. partially glue pages together on one level, glue them together on higher level in the page tree. Subpages can be selected by their label.
+The next thing to do is to configure some of the parameters that guide the output. The macro can be used recursively, i.e. partially glue pages together on one level, glue them together again on a higher level in the page tree. Only some fo the subpages can be selected by their label.
 
 ## Configuration
 
