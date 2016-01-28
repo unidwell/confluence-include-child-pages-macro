@@ -1,15 +1,18 @@
 ## Developed by: Davin Studer
 ## Date created: 12/4/2014
+##
 ## Updated by: Milo Grika
 ## Added: show/hide title, link/unlink title.
+##
 ## Updated by: Gregor Mirai
 ## Date updated: 26/1/2016
-## Added: page separator, PDF split page marker options.
+## Added: page separator, PDF split page marker options, filtering on labels.
+##
  
 ## @param ShowTitle:title=Show Title|type=boolean|desc=Deselect to remove the title of the child page.|default=true
 ## @param LinkTitle:title=Link Title|type=boolean|desc=Select to turn the titles of the child pages into links to those pages (Show Title must be selected).|default=false
 ## @param PageSeparator:title=Page Separator|type=boolean|desc=Separate pages with horizontal ruler.|default=false
-## @param SplitPages:title=Split Pages|type=boolean|desc=Split pages marker for PDF export will be inserted.|default=false
+## @param SplitPages:title=Split Pages|type=boolean|desc=Split pages marker for PDF export will be inserted. Page separator will not be shown when exporting.|default=false
 ## @param FilterLabel:title=Filter on Page Label|type=string|desc=Include only subpages with the specified label.
 ## @param Order:title=Order|type=enum|enumValues=Nav Order,Reverse Nav Order,Alphabetical,Reverse Alphabetical,Create Date,Reverse Create Date|default=nav order|desc=In what order should the child pages be displayed? Nav Order refers to the order of the child pages in the page tree. Reverse Nav Order simply reverses that.
 
@@ -105,7 +108,7 @@
         ## Include page separator or include page split marker used for PDF exports.
         #if( $betweenPages == true )
             #if( $paramPageSeparator == true )
-                #set( $include = $include + '<hr/><br/>' )
+                #set( $include = $include + '<hr class="noprint"/><br class="noprint"/>' )
             #end
             #if( $paramSplitPages == true )
                 #set( $include = $include + '<div style="page-break-before:always;"></div>' )
@@ -127,5 +130,8 @@ $data
     .included-child-page {
         margin-bottom: 30px;
         overflow: hidden;
+    }
+    @media print {
+        .noprint { display: none; }
     }
 </style>

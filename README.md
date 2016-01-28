@@ -26,8 +26,8 @@ There are some configurations options that decide how the output should be displ
 | Show Title           | *boolean value* | Deselect to remove the title of the child page. Selected by default. |
 | Link Title           | *boolean value* | Select to turn the titles of the child pages into links to those pages (Show Title must be selected). |
 | Page Separator       | *boolean value* | Separate pages with horizontal ruler. |
-| Split Pages          | *boolean value* | Split pages marker for PDF export will be inserted. |
-| Filter on Page Label |*string value* | Include only subpages with the specified label. |
+| Split Pages          | *boolean value* | Split pages marker for PDF export will be inserted. Page separator will not be shown when exporting. |
+| Filter on Page Label | *string value*  | Include only subpages with the specified label. |
 | Order                | *Nav Order*, *Reverse Nav Order*, *Alphabetical*, *Reverse Alphabetical*, *Create Date*, *Reverse Create Date* | In what order should the child pages be displayed? **Nav Order** refers to the order of the child pages in the page tree. **Reverse Nav Order** simply reverses that. |
 
 
