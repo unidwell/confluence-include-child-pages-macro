@@ -12,6 +12,10 @@
 ## Date updated: 26/3/2016
 ## Added: parent page selector, the possibility to limit the number of pages included.
 ##
+## Updated by: Ronald van Rij
+## Date updated: 29/4/2016
+## Added: allow setting the html element to use for page titles
+##
 
 ## @param ParentPage:title=Parent Page Title|type=confluence-content|desc=Include children of a specific parent page. If no page is defined, current page will be selected.
 ## @param ShowTitle:title=Show Title|type=boolean|desc=Deselect to remove the title of the child page.|default=true
@@ -21,6 +25,7 @@
 ## @param FilterLabel:title=Filter on Page Label|type=string|desc=Include only subpages with the specified label.
 ## @param Order:title=Order|type=enum|enumValues=Nav Order,Reverse Nav Order,Alphabetical,Reverse Alphabetical,Create Date,Reverse Create Date|default=nav order|desc=In what order should the child pages be displayed? Nav Order refers to the order of the child pages in the page tree. Reverse Nav Order simply reverses that.
 ## @param Limit:title=Limit|type=int|default=|desc=The number of pages to include. If number is not specified all pages will be included.
+## @param HeadingElement:title=HeadingElement|type=string|default=h1|desc=The HTML element to be used for the page titles, defaults to H1
 
 #set( $containerManagerClass=$content.class.forName('com.atlassian.spring.container.ContainerManager') )
 #set( $getInstanceMethod=$containerManagerClass.getDeclaredMethod('getInstance',null) )
@@ -97,9 +102,9 @@
         ## Show title and links.
         #if( $paramShowTitle == true )
             #if( $paramLinkTitle == true )
-                #set( $include = $include + '<h1 class="included-child-page-title"><a href="' + $child.getUrlPath() + '">' + $child.getTitle() + '</a></h1>' )
+                #set( $include = $include + '<'+$paramHeadingElement+' class="included-child-page-title"><a href="' + $child.getUrlPath() + '">' + $child.getTitle() + '</a></'+$paramHeadingElement+'>' )
             #else
-                #set( $include = $include + '<h1 class="included-child-page-title">' + $child.getTitle() + '</h1>' )
+                #set( $include = $include + '<'+$paramHeadingElement+' class="included-child-page-title">' + $child.getTitle() + '</'+$paramHeadingElement+'>' )
             #end
         #end
 
