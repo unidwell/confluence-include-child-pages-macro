@@ -31,6 +31,7 @@ There are some configurations options that guide how the output should be displa
 | Filter on Page Label | *string value*  | Include only subpages with the specified label. |
 | Order                | *Nav Order*, *Reverse Nav Order*, *Alphabetical*, *Reverse Alphabetical*, *Create Date*, *Reverse Create Date* | In what order should the child pages be displayed? **Nav Order** refers to the order of the child pages in the page tree. **Reverse Nav Order** simply reverses that. |
 | Limit | *integer value*  | The number of pages to include. If the number is not specified all pages will be included. |
+| HeadingElement | *string value*  | The HTML element type to use for the titles of the child pages. Defaults to H1. |
 
 ## Trivia
 
