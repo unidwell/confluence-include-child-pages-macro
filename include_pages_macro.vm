@@ -88,11 +88,19 @@
     ## Create the map of labels for the page.
     #set( $labelsMap = {} )
     #foreach( $label in $child.getLabels() )
-        #set( $dummy = $labelsMap.put($label.toString(), 1) )
+        #set( $_ = $labelsMap.put($label.toString(), 1) )
+    #end
+
+    ## Define sorting order.
+    #set( $inOrder = false )
+    #if( $paramOrder == "Nav Order" || $paramOrder == "Alphabetical" || $paramOrder == "Create Date" )
+        #set( $inOrder = true )
     #end
 
     ## Include all pages (when no filter label is specified) or pages with a specific label.
-    #if( ($paramFilterLabel && !$labelsMap.containsKey($paramFilterLabel)) || ($paramLimit != "" && $count+1 >= $Integer.parseInt($paramLimit)) )
+    #if( ($paramFilterLabel && !$labelsMap.containsKey($paramFilterLabel)) ||
+         ($inOrder && $paramLimit != "" && $count+1 >= $Integer.parseInt($paramLimit)) ||
+         (!$inOrder && $paramLimit != "" && $skipped < $size - $Integer.parseInt($paramLimit) ))
         #set( $skipped = $skipped + 1)
     #else
         #set( $count = $count + 1 )
@@ -119,12 +127,6 @@
             #set( $include = $include + '</ac:structured-macro>' )
         #set( $include = $include + '</div>' )
         #set( $include = $include + '</div>' )
-
-        ## Define sorting order.
-        #set( $inOrder = false )
-        #if( $paramOrder == "Nav Order" || $paramOrder == "Alphabetical" || $paramOrder == "Create Date" )
-            #set( $inOrder = true )
-        #end
 
         ## Find out, whether we are in between pages or not.
         #set( $betweenPages = false )
