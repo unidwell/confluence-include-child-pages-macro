@@ -1,7 +1,7 @@
 # Confluence Include Child Pages User Macro
 
 
-The macros includes content of all the immediate child pages of the selected or current page.
+The macros includes content of all the immediate child pages of the selected or current page. It shows only the pages the authenticated user can see.
 
 
 ## Usage
