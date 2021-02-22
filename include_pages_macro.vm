@@ -16,6 +16,10 @@
 ## Date updated: 29/4/2016
 ## Added: allow setting the html element to use for page titles
 ##
+## Updated by: Joel Pearson
+## Date updated: 23/2/2021
+## Fixed: render HTML properly in Confluence 7.11+
+##
 
 ## @param ParentPage:title=Parent Page Title|type=confluence-content|desc=Include children of a specific parent page. If no page is defined, current page will be selected.
 ## @param ShowTitle:title=Show Title|type=boolean|desc=Deselect to remove the title of the child page.|default=true
@@ -50,7 +54,7 @@
 #end
 
 ## Find the array of (sorted) child pages.
-#set( $data = "" )
+#set( $dataHtml = "" )
 #if( $paramOrder == "Nav Order" || $paramOrder == "Reverse Nav Order" )
     #set( $children =  $currentPage.getSortedChildren() )
 #elseif( $paramOrder == "Alphabetical" || $paramOrder == "Reverse Alphabetical" )
@@ -151,15 +155,15 @@
 
             ## Add page content in order or in reverse order.
             #if( $inOrder == true )
-                #set( $data = $data + $include )
+                #set( $dataHtml = $dataHtml + $include )
             #else
-                #set( $data = $include + $data)
+                #set( $dataHtml = $include + $dataHtml)
             #end
         #end
     #end
 #end
  
-$data
+$dataHtml
 
 <style type="text/css">
     .included-child-page {
